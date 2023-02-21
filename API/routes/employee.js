@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.router();
+const router = express.Router();
 const Employee = require("../models/Employees");
 require("dotenv/config");
 const mongoose = require("mongoose");
@@ -68,7 +68,7 @@ router.get("/getEmployeesByName/:firstName", async (req,res)=>{
 
 //UPDATE EMPLOYEE BY ID
 
-router.patch("updateEmployeeById/:employeeId", async (req,res)=>{
+router.patch("/updateEmployeeById/:employeeId", async (req,res)=>{
 
     const employeeId = req.params;
     const content = req.body;
@@ -77,7 +77,7 @@ router.patch("updateEmployeeById/:employeeId", async (req,res)=>{
 
         //Update item by ID
         await Employee.findOneAndUpdate({
-            employeeId: mongoose.Types.ObjectId(employeeid),
+            employeeId: mongoose.Types.ObjectId(employeeId),
         },
         content
         );
@@ -90,17 +90,16 @@ router.patch("updateEmployeeById/:employeeId", async (req,res)=>{
     }
 
 
-})
+});
 
 //DELETE EMPLOYEE BY ID
-router.delete("removeEmployeeById/:employeeId", async (req,res)=>{
+router.delete("/removeEmployeeById/:employeeId", async (req,res)=>{
 
-    const employeeId = req.params;
-
+    const employeeId = req.params
     try{
-        await Employee.remove({
-            employeeId: mongoose.Types.ObjectId(employeeId),
-        });
+        await Employee.deleteOne({
+            employeeId: String(employeeId),
+        }).exec();
 
         res.status(200).json({message:"success"});
     }catch(err){
@@ -110,5 +109,5 @@ router.delete("removeEmployeeById/:employeeId", async (req,res)=>{
 });
 
 
-modules.exports = router;
+module.exports = router;
 
