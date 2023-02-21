@@ -5,12 +5,13 @@ const User = require("../models/User");
 const RefreshToken = require("../models/RefreshToken");
 const jwt =require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const uuid = require("uuid-random");
 
 
 
 //Register
-router.post("register", async (req,res) =>{
-    const { id, username, password} = req.body;
+router.post("/register", async (req,res) =>{
+    const {username, password} = req.body;
 
     //check if username in use
     const userExists = await User.findOne({username});
@@ -21,10 +22,11 @@ router.post("register", async (req,res) =>{
     const salt = await bcrypt.genSalt(10);
 
     const hashedPassword = await bcrypt.hash(password, salt);
+    const guid = uuid();
 
     //create user object
     const user = new User({
-        id,
+        id: guid,
         username,
         password: hashedPassword,
     })
@@ -49,7 +51,7 @@ router.post("/login", async (req,res)=>{
     //check user exists
     const user = await User.findOne({username});
 
-    if(!user) return res.status(401).json("invalid Email");
+    if(!user) return res.status(401).json("invalid Username");
 
     //check if password is correct
     const validPass = await bcrypt.compare(password, user.password)
