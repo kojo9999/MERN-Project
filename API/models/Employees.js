@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const EmployeeSchema = new mongoose.Schema({
 
     employeeId:{
-        type: mongoose.Types.ObjectId,
+        type: String,
     },
     firstName:{
         type: String,
@@ -24,6 +24,6 @@ const EmployeeSchema = new mongoose.Schema({
     age:{
         type: Number
     }
-});
+}, {collection:'Employees'});
 
 module.exports = mongoose.model("Employees",EmployeeSchema);
