@@ -18,7 +18,7 @@ const EmployeeSchema = new mongoose.Schema({
         type:String,
         max:256
     },
-    activite:{
+    active:{
         type: Boolean,
     },
     age:{
