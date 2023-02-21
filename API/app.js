@@ -14,7 +14,7 @@ app.use(express.json());
 // });
 
 
-const employeeRoute = require("./routes/auth");
+const employeeRoute = require("./routes/employee");
 const authRoute = require("./routes/auth");
 
 
