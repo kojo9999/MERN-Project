@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
-const EmployeeSchema = new mongoose.Schema({
+const SkillLevelSchema = new mongoose.Schema({
 
     skillLevelId:{
-        type: mongoose.Types.ObjectId,
+        type: String,
     },
     skillName:{
         type: String,
