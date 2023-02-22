@@ -44,7 +44,7 @@ router.get("/getAllEmployees", async (req,res)=>{
 
     try{
         //get all employees
-        const allEmployees = await Employee.find({});
+        const allEmployees = await Employee.find({}).populate('skills');
 
         //return employee list
         res.status(200).json({allEmployees});
@@ -62,7 +62,7 @@ router.get("/getEmployeesByName/:firstName", async (req,res)=>{
         //get  employees with matching name
         const returnedEmployees = await Employee.find({
             firstName: String(firstName),
-        });
+        }).populate('skills');
 
         //return employee list
         res.status(200).json({returnedEmployees});

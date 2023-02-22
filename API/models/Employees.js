@@ -19,7 +19,7 @@ const EmployeeSchema = new mongoose.Schema({
         max:256
     },
     skills:[{
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         ref:"SkillLevel"
     }],
     active:{
