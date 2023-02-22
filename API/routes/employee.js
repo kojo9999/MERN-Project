@@ -3,15 +3,18 @@ const router = express.Router();
 const Employee = require("../models/Employees");
 require("dotenv/config");
 const mongoose = require("mongoose");
+const uuid = require("uuid-random");
 
 //CREATE NEW EMPLOYEE
 router.post("/createEmployee", async (req,res)=>{
-const{employeeId, firstName, lastName, dateOfBirth, email, active, age}=req.body;
+const{firstName, lastName, dateOfBirth, email, active, age}=req.body;
+
+const guid = uuid();
 
 //create new employee object
 
 const employee = new Employee({
-    employeeId,
+    employeeId: guid,
     firstName, 
     lastName, 
     dateOfBirth, 
@@ -77,7 +80,7 @@ router.patch("/updateEmployeeById/:employeeId", async (req,res)=>{
 
         //Update item by ID
         await Employee.findOneAndUpdate({
-            employeeId: mongoose.Types.ObjectId(employeeId),
+            employeeId: String(employeeId),
         },
         content
         );
