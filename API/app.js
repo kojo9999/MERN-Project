@@ -16,12 +16,12 @@ app.use(express.json());
 
 const employeeRoute = require("./routes/employee");
 const authRoute = require("./routes/auth");
-const skillLevelRoute = require("./routes/skillLevel")
+const skillLevelRoute = require("./routes/skillLevel");
 
 
 app.use("/api/employee", employeeRoute);
 app.use("/api/auth", authRoute);
-app.use("api/skillLevel", skillLevelRoute);
+app.use("/api/skillLevel", skillLevelRoute);
 
 // DB CONNECTION
 mongoose.connect(

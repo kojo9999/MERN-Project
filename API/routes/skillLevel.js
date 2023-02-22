@@ -91,3 +91,5 @@ const uuid = require("uuid-random");
     }
 
     });
+
+    module.exports = router;
