@@ -18,6 +18,10 @@ const EmployeeSchema = new mongoose.Schema({
         type:String,
         max:256
     },
+    skills:[{
+        type: String,
+        ref:"SkillLevel"
+    }],
     active:{
         type: Boolean,
     },
