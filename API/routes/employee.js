@@ -5,9 +5,11 @@ require("dotenv/config");
 const mongoose = require("mongoose");
 const uuid = require("uuid-random");
 
+
+
 //CREATE NEW EMPLOYEE
 router.post("/createEmployee", async (req,res)=>{
-const{firstName, lastName, dateOfBirth, email, active, age}=req.body;
+const{firstName, lastName, dateOfBirth, email, active,age}=req.body;
 
 const guid = uuid();
 
@@ -19,8 +21,9 @@ const employee = new Employee({
     lastName, 
     dateOfBirth, 
     email, 
+    skills:[],
     active, 
-    age
+    age,
 });
 
 try{
