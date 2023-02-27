@@ -2,16 +2,18 @@ require("dotenv/config");
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const cors = require('cors');
 
 const SERVER_PORT = process.env.PORT || 4000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// app.use((req, res, next) => {
+app.use((req, res, next) => {
 //   res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 //   res.setHeader("Pragma", "no-cache");
 //   res.setHeader("Expires", "0");
-//   next();
-// });
+res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  next();
+ });
 
 
 const employeeRoute = require("./routes/employee");
@@ -22,6 +24,10 @@ const skillLevelRoute = require("./routes/skillLevel");
 app.use("/api/employee", employeeRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/skillLevel", skillLevelRoute);
+
+app.use(cors({
+  origin: '*'
+}));
 
 // DB CONNECTION
 mongoose.connect(
