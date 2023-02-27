@@ -24,19 +24,41 @@ router.post("/register", async (req,res) =>{
     const hashedPassword = await bcrypt.hash(password, salt);
     const guid = uuid();
 
-    //create user object
-    const user = new User({
-        id: guid,
-        username,
-        password: hashedPassword,
-    })
+        //create user object
+        const user = new User({
+            id: guid,
+            username,
+            password: hashedPassword,
+        })
+
+        //create JWT tokens
+        const accessToken = jwt.sign(
+            {_id: user._id},
+            process.env.TOKEN_SECRET,
+            {
+                expiresIn:"60m",
+            }
+        );
+    
+        refreshToken =jwt.sign(
+            {_id: user._id},
+            process.env.REFRESH_TOKEN_SECRET
+        );
+    
+        //Create a new refresh token object
+        const newRefreshToken = new RefreshToken({
+            token: refreshToken,
+        });
+
+
 
     try{
         //save user to collection
         const savedUser = await user.save();
+        newRefreshToken.save()
 
         //return user id and ok
-        res.status(200).json({user:user._id});
+        res.status(200).json({user:user,accessToken, refreshToken: refreshToken});
     } catch(err){
         //return error message
         res.status(401).json({message: err.message});

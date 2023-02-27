@@ -44,10 +44,10 @@ router.get("/getAllEmployees", async (req,res)=>{
 
     try{
         //get all employees
-        const allEmployees = await Employee.find({}).populate('skills');
+        const Employees = await Employee.find({}).populate('skills');
 
         //return employee list
-        res.status(200).json({allEmployees});
+        res.status(200).json({Employees});
     }catch(err){
         res.status(401).json({message:err.message})
     }
