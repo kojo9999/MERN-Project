@@ -4,23 +4,62 @@ const SkillLevel = require("../models/SkillLevel");
 require("dotenv/config");
 const mongoose = require("mongoose");
 const uuid = require("uuid-random");
+const nodecache = require('node-cache')
+const appCache = new nodecache({stdTTL:360})
+require('isomorphic-fetch');
 
 
 router.get("/getAllSkillLevels", async (req,res)=>{
 
-    try{
-        //get all employees
-        const SkillLevels = await SkillLevel.find({});
+    if(appCache.has('allSkillLevels')){
+        const skillLevels= appCache.get('allSkillLevels');
+        console.log('Data from node cache');
+        res.status(200).json({skillLevels});
+    }else{
 
-        //return employee list
-        res.status(200).json({SkillLevels});
-    }catch(err){
-        res.status(401).json({message:err.message})
+        try{
+            //get all skill levels
+            const skillLevels = await SkillLevel.find({});
+
+            //return skill level list
+            appCache.set("allSkillLevels",skillLevels)
+            res.status(200).json({skillLevels});
+        }catch(err){
+            res.status(401).json({message:err.message})
+        }
     }
 });
 
-    //CREATE NEW SKILL LEVEL
-    router.post("/createNewSkillLevel", async (req,res)=>{
+//FIND SKILL LEVEL BY ID
+router.get("/getSkillLevelById/:skillLevelId", async (req,res)=>{
+
+    const skillLevelId = req.params.skillLevelId;
+
+    if(appCache.has(skillLevelId)){
+        const returnedSkillLevel= appCache.get(skillLevelId);
+        console.log('Data from node cache');
+        res.status(200).json({returnedSkillLevel});
+    }else{
+
+        try{
+            const returnedSkillLevel = await SkillLevel.find({
+                skillLevelId:String(skillLevelId),
+            });
+
+            appCache.set(skillLevelId,returnedSkillLevel)
+            res.status(200).json({returnedSkillLevel});
+
+        }catch(err){
+
+            res.status(401).json({message:err.message});
+
+        }
+    }
+
+});
+
+     //CREATE NEW SKILL LEVEL
+     router.post("/createNewSkillLevel", async (req,res)=>{
         const{skillName,skillDesc} = req.body;
 
         const guid = uuid();
@@ -41,26 +80,6 @@ router.get("/getAllSkillLevels", async (req,res)=>{
             res.status(200).json({messsage:"Skill Level Created Successfully"});
         }catch(err){
             res.status(401).json({message:err.message})
-        }
-
-    });
-
-    //FIND SKILL LEVEL BY ID
-    router.get("/getSkillLevelById/:skillLevelId", async (req,res)=>{
-
-        const skillLevelId = req.params.skillLevelId;
-
-        try{
-            const returnedSkillLevel = await SkillLevel.find({
-                skillLevelId:String(skillLevelId),
-            });
-
-            res.status(200).json({returnedSkillLevel});
-
-        }catch(err){
-
-            res.status(401).json({message:err.message});
-
         }
 
     });
