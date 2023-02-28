@@ -49,7 +49,7 @@ function EmployeeList() {
                   </div>
                 ))}
               </td>
-              <td><a href={`/edit/${employee.employeeId}`}>Edit</a></td>
+              <td><a href={`/editEmployee/${employee.employeeId}`}>Edit</a></td>
               <td><a >Delete</a></td>
             </tr>
           ))}
