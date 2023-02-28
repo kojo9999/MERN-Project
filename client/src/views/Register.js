@@ -16,7 +16,7 @@ const Register = () => {
 
     const [values,setValues] =useState(initalState)
 
-    const {registerUser,user} = useAppContext()
+    const {registerUser,user,loginUser} = useAppContext()
     const navigate = useNavigate()
 
     const toggleMember = () => {
@@ -33,13 +33,13 @@ const Register = () => {
 
         const {username,email,password,isMember} = values;
 
-        if(!email||!password||(!isMember&&!username)){
+        if(!username||!password||(!isMember&&!username)){
             return
         }
 
         const currentUser = {username,email,password}
         if(isMember){
-            console.log('Already a member')
+            loginUser(currentUser)
         }else{
             registerUser(currentUser)
         }
@@ -67,9 +67,10 @@ const Register = () => {
 
 <FormInput
 
-type='text'
-value={values.username}
-name='username'
+
+type='email'
+value={values.email}
+name='email'
 handleChange={handleChange}
 
 />
@@ -80,9 +81,9 @@ handleChange={handleChange}
 
 <FormInput
 
-type='email'
-value={values.email}
-name='email'
+type='text'
+value={values.username}
+name='username'
 handleChange={handleChange}
 
 />
