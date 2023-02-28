@@ -4,6 +4,9 @@ const Employee = require("../models/Employees");
 require("dotenv/config");
 const mongoose = require("mongoose");
 const uuid = require("uuid-random");
+const nodecache = require('node-cache')
+const appCache = new nodecache({stdTTL:360})
+require('isomorphic-fetch');
 
 
 
@@ -43,54 +46,72 @@ try{
 
 router.get("/getAllEmployees", async (req,res)=>{
 
+    if(appCache.has('allEmployees')){
+        const Employees= appCache.get('allEmployees');
+        console.log('Data from node cache');
+        res.status(200).json({Employees});
+    }else{
+
     try{
         //get all employees
         const Employees = await Employee.find({}).populate('skills');
 
         //return employee list
+        appCache.set("allEmployees",Employees)
         res.status(200).json({Employees});
     }catch(err){
         res.status(401).json({message:err.message})
     }
+}
 });
 
-//GET EMPLOYEES BY NAME
-router.get("/getEmployeesByName/:firstName", async (req,res)=>{
-
+// GET EMPLOYEES BY NAME
+router.get("/getEmployeesByName/:firstName", async (req, res) => {
     const firstName = req.params.firstName;
-
-    try{
-        //get  employees with matching name
+  
+    if (appCache.has(`employeesByName_${firstName}`)) {
+      const Employees = appCache.get(`employeesByName_${firstName}`);
+      console.log(`Data for ${firstName} from node cache`);
+      res.status(200).json({ Employees });
+    } else {
+      try {
+        // get employees with matching name
         const returnedEmployees = await Employee.find({
-            firstName: String(firstName),
-        }).populate('skills');
-
-        //return employee list
-        res.status(200).json({returnedEmployees});
-    }catch(err){
-        res.status(401).json({message:err.message})
+          firstName: String(firstName),
+        }).populate("skills");
+  
+        // return employee list
+        appCache.set(`employeesByName_${firstName}`, returnedEmployees);
+        res.status(200).json({ returnedEmployees });
+      } catch (err) {
+        res.status(401).json({ message: err.message });
+      }
     }
-
-});
-
-//GET EMPLOYEES BY NAME
-router.get("/getEmployeeById/:employeeId", async (req,res)=>{
-
+  });
+  
+  // GET EMPLOYEE BY ID
+  router.get("/getEmployeeById/:employeeId", async (req, res) => {
     const employeeId = req.params.employeeId;
-
-    try{
-        //get  employees with matching name
+  
+    if (appCache.has(`employeeById_${employeeId}`)) {
+      const Employees = appCache.get(`employeeById_${employeeId}`);
+      console.log(`Data for ${employeeId} from node cache`);
+      res.status(200).json({ Employees });
+    } else {
+      try {
+        // get employees with matching id
         const returnedEmployees = await Employee.find({
-            employeeId: String(employeeId),
-        }).populate('skills');
-
-        //return employee list
-        res.status(200).json({returnedEmployees});
-    }catch(err){
-        res.status(401).json({message:err.message})
+          employeeId: String(employeeId),
+        }).populate("skills");
+  
+        // return employee list
+        appCache.set(`employeeById_${employeeId}`, returnedEmployees);
+        res.status(200).json({ returnedEmployees });
+      } catch (err) {
+        res.status(401).json({ message: err.message });
+      }
     }
-
-});
+  });
 
 //UPDATE EMPLOYEE BY ID
 
