@@ -7,6 +7,7 @@ const uuid = require("uuid-random");
 const nodecache = require('node-cache')
 const appCache = new nodecache({stdTTL:360})
 require('isomorphic-fetch');
+const private = require('./private')
 
 
 
@@ -44,7 +45,7 @@ try{
 
 //GET ALL EMPLOYEES
 
-router.get("/getAllEmployees", async (req,res)=>{
+router.get("/getAllEmployees", private,async (req,res)=>{
 
     if(appCache.has('allEmployees')){
         const Employees= appCache.get('allEmployees');
