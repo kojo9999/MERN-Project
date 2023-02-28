@@ -9,7 +9,7 @@ const uuid = require("uuid-random");
 
 //CREATE NEW EMPLOYEE
 router.post("/createEmployee", async (req,res)=>{
-const{firstName, lastName, dateOfBirth, email, active,age}=req.body;
+const{firstName, lastName, dateOfBirth, email, active,age,skills}=req.body;
 
 const guid = uuid();
 
@@ -21,7 +21,7 @@ const employee = new Employee({
     lastName, 
     dateOfBirth, 
     email, 
-    skills:[],
+    skills,
     active, 
     age,
 });
@@ -29,6 +29,7 @@ const employee = new Employee({
 try{
     //Save Employee to collection
     await employee.save();
+    console.log(employee)
 
     //return Employee success message
     res.status(200).json({message:"Employee created Successfully"});
@@ -122,9 +123,10 @@ router.patch("/updateEmployeeById/:employeeId", async (req,res)=>{
 router.delete("/removeEmployeeById/:employeeId", async (req,res)=>{
 
     const employeeId = req.params
+    console.log(employeeId.employeeId)
     try{
         await Employee.deleteOne({
-            employeeId: String(employeeId),
+            _id: employeeId.employeeId,
         }).exec();
 
         res.status(200).json({message:"success"});
