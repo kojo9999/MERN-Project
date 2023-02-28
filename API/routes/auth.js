@@ -112,7 +112,7 @@ router.post("/login", async (req,res)=>{
 });
 
 //Refresh access tokens
-router.post("token",(req,res) => {
+router.post("/token",(req,res) => {
     const {refreshToken} = req.body;
 
     //Check if token refresh empty
