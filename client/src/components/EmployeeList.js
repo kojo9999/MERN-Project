@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import "../App.css"
+import { Link, useNavigate } from 'react-router-dom'
+import Navbar from './Navbar.js';
 
 function EmployeeList() {
   const [employees, setEmployees] = useState([]);
+  const navigate = useNavigate()
 
   useEffect(() => {
     axios.get('http://localhost:4000/api/employee/getAllEmployees')
@@ -12,11 +15,28 @@ function EmployeeList() {
         console.error(error);
         // handle error
       });
+
+      
   }, []);
+
+  const handleDelete = (event) => {
+    const employeeId = event.target.value;
+    console.log(employeeId)
+    event.preventDefault();
+  axios.delete(`http://localhost:4000/api/employee/removeEmployeeById/${employeeId}`)
+  .then(navigate(0))
+  .catch(error => {
+    console.error(error);
+    
+  });
+  }
+
+  
 
 
   return (
     <div>
+      <Navbar/>
       <h1>Employee List</h1>
       <table>
         <thead>
@@ -49,8 +69,9 @@ function EmployeeList() {
                   </div>
                 ))}
               </td>
-              <td><a href={`/editEmployee/${employee.employeeId}`}>Edit</a></td>
-              <td><a >Delete</a></td>
+              <td><Link style={{ textDecoration: 'none',color:'black' }} to={`/editEmployee/${employee.employeeId}`}><button>Edit</button></Link></td>
+              <td><button onClick={handleDelete}value={employee._id}>Delete</button></td>
+              
             </tr>
           ))}
         </tbody>
