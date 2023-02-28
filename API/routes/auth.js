@@ -103,7 +103,7 @@ router.post("/login", async (req,res)=>{
         //Save refresh token object to collection
         newRefreshToken.save();
 
-        res.json({accessToken, refreshToken: refreshToken});
+        res.json({user,accessToken, refreshToken: refreshToken});
     } catch(err){
         //return error messageand status
         res.status(401).json({message: err.message});
