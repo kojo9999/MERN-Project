@@ -72,8 +72,10 @@ router.get("/getAllSkillLevels", async (req,res)=>{
 
         try{
             await SkillLevel.deleteOne({
-                skillLevelId: String(skillLevelId),
+                skillLevelId: String(skillLevelId.skillLevelId),
             }).exec();
+
+        
 
             res.status(200).json({message:"Success"})
         }catch(err){
@@ -86,7 +88,7 @@ router.get("/getAllSkillLevels", async (req,res)=>{
     //UPDATE SKILL LEVEL BY ID
     router.patch("/updateSkillLevelById/:skillLevelId",async (req,res)=>{
 
-        const skillLevelId = req.params;
+        const {skillLevelId} = req.params;
         const content = req.body;
 
         try{
@@ -95,8 +97,7 @@ router.get("/getAllSkillLevels", async (req,res)=>{
         },
         content
         );
-
-        res.status(200).json({message:"success"});
+        res.status(200).json({message:"success",content});
     }catch(err){
         res.status(401).json({message:err.message});
     }
