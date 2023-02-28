@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom'
 import axios from "axios";
 import "../App.css";
+import Navbar from "../components/Navbar";
 
 function EditEmployee() {
   const { employeeId } = useParams();
@@ -58,6 +59,8 @@ function EditEmployee() {
   }
 
   return (
+    <div>
+      <Navbar/>
     <div className="edit-employee-container">
       <form className="edit-employee-form" onSubmit={handleSubmit}>
         <h2>Edit Employee</h2>
@@ -102,6 +105,7 @@ function EditEmployee() {
         </label>
         <button className="submit-button" type="submit">Save</button>
       </form>
+    </div>
     </div>
   );
 }
