@@ -12,8 +12,10 @@ app.use((req, res, next) => {
 //   res.setHeader("Pragma", "no-cache");
 //   res.setHeader("Expires", "0");
 res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
   next();
  });
+ 
 
 
 const employeeRoute = require("./routes/employee");
