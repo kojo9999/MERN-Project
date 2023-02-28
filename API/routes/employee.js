@@ -72,27 +72,47 @@ router.get("/getEmployeesByName/:firstName", async (req,res)=>{
 
 });
 
+//GET EMPLOYEES BY NAME
+router.get("/getEmployeeById/:employeeId", async (req,res)=>{
+
+    const employeeId = req.params.employeeId;
+
+    try{
+        //get  employees with matching name
+        const returnedEmployees = await Employee.find({
+            employeeId: String(employeeId),
+        }).populate('skills');
+
+        //return employee list
+        res.status(200).json({returnedEmployees});
+    }catch(err){
+        res.status(401).json({message:err.message})
+    }
+
+});
+
 //UPDATE EMPLOYEE BY ID
 
 router.patch("/updateEmployeeById/:employeeId", async (req,res)=>{
 
-    const employeeId = req.params;
+    const {employeeId} = req.params;
     const content = req.body;
 
     try{
 
         //Update item by ID
         await Employee.findOneAndUpdate({
-            employeeId: String(employeeId),
+            employeeId:String(employeeId),
         },
         content
         );
-
+        console.log(employeeId)
         //Return item success message
-        res.status(200).json({message:"success"});
+        res.status(200).json({message:"success",content});
     }catch(err){
         //return error message
         res.status(401).json({message:err.message});
+        console.log(err)
     }
 
 

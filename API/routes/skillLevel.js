@@ -6,7 +6,18 @@ const mongoose = require("mongoose");
 const uuid = require("uuid-random");
 
 
-    
+router.get("/getAllSkillLevels", async (req,res)=>{
+
+    try{
+        //get all employees
+        const SkillLevels = await SkillLevel.find({});
+
+        //return employee list
+        res.status(200).json({SkillLevels});
+    }catch(err){
+        res.status(401).json({message:err.message})
+    }
+});
 
     //CREATE NEW SKILL LEVEL
     router.post("/createNewSkillLevel", async (req,res)=>{
