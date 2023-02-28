@@ -9,12 +9,17 @@ function EmployeeList() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    axios.get('http://localhost:4000/api/employee/getAllEmployees')
-      .then(response => setEmployees(response.data.Employees))
-      .catch(error => {
-        console.error(error);
-        // handle error
-      });
+    const token = JSON.parse(localStorage.getItem('accessToken'));
+axios.get('http://localhost:4000/api/employee/getAllEmployees', {
+  headers: {
+    'Authorization': 'Bearer ' + token
+  }
+})
+.then(response => setEmployees(response.data.Employees))
+.catch(error => {
+  console.error(error);
+  // handle error
+});
 
       
   }, []);
