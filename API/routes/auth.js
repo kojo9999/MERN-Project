@@ -111,53 +111,6 @@ router.post("/login", async (req,res)=>{
 
 });
 
-//Refresh access tokens
-router.post("/token",(req,res) => {
-    const {refreshToken} = req.body;
-
-    //Check if token refresh empty
-    if(!refreshToken) return res.status(401).json("No token");
-
-    try{
-
-        //Check if refresh token exists
-        RefreshToken.findOne({token: refreshToken}, (err,doc)=>{
-
-            //return error for no token
-            if(doc=== null) return res.status(401).json("Toekn not found");
-
-            jwt.verify(
-                refreshToken,
-                process.env.REFRESH_TOKEN_SECRET,
-                (err,user) => {
-                    //return error if token invalid
-                    if(err) return res.status(401).json("Token invalid");
-
-                    //Create new access token
-
-                    const newAccessToken =jwt.sign(
-
-                        {_id: user._id},
-                        process.env.TOKEN_SECRET,
-                        {
-                            expiresIn: "15m",
-                        }
-                    );
-
-                    //return new access token
-                    res.json({accessToken: newAccessToken});
-
-                }
-            );
-
-        });
-
-    } catch (err){
-        //return error message
-        res.status(401).json("Something went wrong. Try again")
-    }
-
-});
 
 //Logout
 
@@ -176,5 +129,54 @@ router.delete("logout", async (req,res) =>{
     }
 
 });
+
+
+//REFRESH ACCESS TOKEN
+router.post("/token", async (req, res) => {
+
+    const authHeader = req.headers.authorization;
+if (!authHeader) {
+  return res.status(401).json({ message: "Authorization header missing" });
+}
+
+    const refreshToken = req.headers.authorization.split(' ')[1];
+
+  
+    //Check if refresh token empty
+    if (!refreshToken) return res.status(401).json("No Token");
+  
+    try {
+      //Check if refresh token exists
+      RefreshToken.findOne({ token: refreshToken }, (err, doc) => {
+        //Return error if not found
+        if (doc === null) return res.status(401).json("Token Not Found");
+  
+        //Verify refresh token
+        jwt.verify(
+          refreshToken,
+          process.env.REFRESH_TOKEN_SECRET,
+          (err, user) => {
+            //Return error if token isn't valid
+            if (err) return res.status(401).json("Token Invalid");
+  
+            //Create new access token
+            const newAccessToken = jwt.sign(
+              { _id: user._id },
+              process.env.TOKEN_SECRET,
+              {
+                expiresIn: "1h",
+              }
+            );
+  
+            //Return new access token
+            res.json({ accessToken: newAccessToken });
+          }
+        );
+      });
+    } catch (err) {
+      //Return error message
+      res.status(401).json("Oops something went wrong!");
+    }
+  });
 
 module.exports = router;
