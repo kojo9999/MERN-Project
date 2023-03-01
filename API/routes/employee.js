@@ -12,7 +12,7 @@ const private = require('./private')
 
 
 //CREATE NEW EMPLOYEE
-router.post("/createEmployee", async (req,res)=>{
+router.post("/createEmployee", private,async (req,res)=>{
 const{firstName, lastName, dateOfBirth, email, active,age,skills}=req.body;
 
 const guid = uuid();
@@ -67,7 +67,7 @@ router.get("/getAllEmployees", private,async (req,res)=>{
 });
 
 // GET EMPLOYEES BY NAME
-router.get("/getEmployeesByName/:firstName", async (req, res) => {
+router.get("/getEmployeesByName/:firstName", private,async (req, res) => {
     const firstName = req.params.firstName;
   
     if (appCache.has(`employeesByName_${firstName}`)) {
@@ -91,7 +91,7 @@ router.get("/getEmployeesByName/:firstName", async (req, res) => {
   });
   
   // GET EMPLOYEE BY ID
-  router.get("/getEmployeeById/:employeeId", async (req, res) => {
+  router.get("/getEmployeeById/:employeeId",private,async (req, res) => {
     const employeeId = req.params.employeeId;
   
     if (appCache.has(`employeeById_${employeeId}`)) {
@@ -116,7 +116,7 @@ router.get("/getEmployeesByName/:firstName", async (req, res) => {
 
 //UPDATE EMPLOYEE BY ID
 
-router.patch("/updateEmployeeById/:employeeId", async (req,res)=>{
+router.patch("/updateEmployeeById/:employeeId", private,async (req,res)=>{
 
     const {employeeId} = req.params;
     const content = req.body;
@@ -142,7 +142,7 @@ router.patch("/updateEmployeeById/:employeeId", async (req,res)=>{
 });
 
 //DELETE EMPLOYEE BY ID
-router.delete("/removeEmployeeById/:employeeId", async (req,res)=>{
+router.delete("/removeEmployeeById/:employeeId",private, async (req,res)=>{
 
     const employeeId = req.params
     console.log(employeeId.employeeId)
