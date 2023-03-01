@@ -19,12 +19,13 @@ function EditEmployee() {
   useEffect(() => {
     // Fetch employee data from the API and update state
     axios.get(`/api/employee/getEmployeeById/${employeeId}`,config).then((response) => {
-      setEmployee(response.data.returnedEmployees);
+      setEmployee(response.data.Employees[0]);
     });
 
     // Fetch skills from the API and update state
     axios.get("/api/skillLevel/getAllSkillLevels",config).then((response) => {
-      setSkills(response.data.SkillLevels);
+      setSkills(response.data.skillLevels);
+      console.log(response.data.skillLevels);
     });
   }, [employeeId]);
 
@@ -70,7 +71,7 @@ function EditEmployee() {
         <h2>Edit Employee</h2>
         <label>
           First Name:
-          <input type="text" name="firstName" defaultValue={employee.firstName} />
+          <input type="text" name="firstName" defaultValue={employee.firstName}/>
         </label>
         <label>
           Last Name:
