@@ -11,7 +11,7 @@ function CreateEmployee() {
   useEffect(() => {
     // Fetch skills from the API and update state
     axios.get("/api/skillLevel/getAllSkillLevels").then((response) => {
-      setSkills(response.data.SkillLevels);
+      setSkills(response.data.skillLevels);
     });
   }, []);
 
