@@ -8,6 +8,10 @@ function CreateSkill() {
   const [skillName, setSkillName] = useState('');
   const [skillDesc, setSkillDesc] = useState('');
   const navigate = useNavigate()
+  const token = JSON.parse(localStorage.getItem('accessToken'));
+  const config ={
+    headers: { Authorization: `Bearer ${token}` }
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -20,7 +24,7 @@ function CreateSkill() {
 
     console.log(formData);
 
-    axios.post('/api/skillLevel/createNewSkillLevel', formData)
+    axios.post('/api/skillLevel/createNewSkillLevel', formData,config)
     .then((response) => {
       console.log(response.data);
     });

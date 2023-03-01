@@ -11,15 +11,19 @@ function EditEmployee() {
   const [skills, setSkills] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState();
   const navigate = useNavigate()
+  const token = JSON.parse(localStorage.getItem('accessToken'));
+  const config ={
+    headers: { Authorization: `Bearer ${token}` }
+  };
 
   useEffect(() => {
     // Fetch employee data from the API and update state
-    axios.get(`/api/employee/getEmployeeById/${employeeId}`).then((response) => {
+    axios.get(`/api/employee/getEmployeeById/${employeeId}`,config).then((response) => {
       setEmployee(response.data.returnedEmployees);
     });
 
     // Fetch skills from the API and update state
-    axios.get("/api/skillLevel/getAllSkillLevels").then((response) => {
+    axios.get("/api/skillLevel/getAllSkillLevels",config).then((response) => {
       setSkills(response.data.SkillLevels);
     });
   }, [employeeId]);
@@ -46,7 +50,7 @@ function EditEmployee() {
 
     console.log(formData);
 
-    axios.patch(`/api/employee/updateEmployeeById/${employeeId}`, formData)
+    axios.patch(`/api/employee/updateEmployeeById/${employeeId}`, formData,config)
     .then((response) => {
       console.log(response.data);
     });

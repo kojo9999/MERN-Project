@@ -7,28 +7,35 @@ import Navbar from './Navbar.js';
 function SkillList() {
   const [skills, setSkills] = useState([]);
   const navigate = useNavigate()
+  const token = JSON.parse(localStorage.getItem('accessToken'));
+  const config ={
+    headers: { Authorization: `Bearer ${token}` }
+  };
 
   useEffect(() => {
-    axios.get('http://localhost:4000/api/skillLevel/getAllSkillLevels')
-      .then(response => setSkills(response.data.SkillLevels))
+    axios.get('http://localhost:4000/api/skillLevel/getAllSkillLevels',config)
+      .then(response => setSkills(response.data.skillLevels))
       .catch(error => {
         console.error(error);
         // handle error
       });
 
+      console.log(skills)
       
   }, []);
 
   const handleDelete = (event) => {
     const skillId = event.target.value;
-    console.log(skillId)
     event.preventDefault();
-  axios.delete(`http://localhost:4000/api/skillLevel/deleteSkillLevelById/${skillId}`)
+  axios.delete(`http://localhost:4000/api/skillLevel/deleteSkillLevelById/${skillId}`,config)
   .then(navigate(0))
   .catch(error => {
     console.error(error);
     
   });
+
+  
+
   }
 
   

@@ -7,14 +7,17 @@ import Navbar from './Navbar.js';
 function EmployeeList() {
   const [employees, setEmployees] = useState([]);
   const navigate = useNavigate()
+  const token = JSON.parse(localStorage.getItem('accessToken'));
+  const config ={
+    headers: { Authorization: `Bearer ${token}` }
+  };
+  
+
+
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem('accessToken'));
-axios.get('http://localhost:4000/api/employee/getAllEmployees', {
-  headers: {
-    'Authorization': 'Bearer ' + token
-  }
-})
+  
+axios.get('http://localhost:4000/api/employee/getAllEmployees', config)
 .then(response => setEmployees(response.data.Employees))
 .catch(error => {
   console.error(error);
