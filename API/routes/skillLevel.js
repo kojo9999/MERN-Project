@@ -7,6 +7,7 @@ const uuid = require("uuid-random");
 const nodecache = require('node-cache')
 const appCache = new nodecache({stdTTL:360})
 require('isomorphic-fetch');
+const private = require("./private")
 
 
 router.get("/getAllSkillLevels",private, async (req,res)=>{
@@ -31,7 +32,7 @@ router.get("/getAllSkillLevels",private, async (req,res)=>{
 });
 
 //FIND SKILL LEVEL BY ID
-router.get("/getSkillLevelById/:skillLevelId", priavte,async (req,res)=>{
+router.get("/getSkillLevelById/:skillLevelId", private,async (req,res)=>{
 
     const skillLevelId = req.params.skillLevelId;
 
@@ -59,7 +60,7 @@ router.get("/getSkillLevelById/:skillLevelId", priavte,async (req,res)=>{
 });
 
      //CREATE NEW SKILL LEVEL
-     router.post("/createNewSkillLevel",priavte, async (req,res)=>{
+     router.post("/createNewSkillLevel",private, async (req,res)=>{
         const{skillName,skillDesc} = req.body;
 
         const guid = uuid();
@@ -85,7 +86,7 @@ router.get("/getSkillLevelById/:skillLevelId", priavte,async (req,res)=>{
     });
 
     //DELETE SKILL LEVEL BY ID
-    router.delete("/deleteSkillLevelById/:skillLevelId", priavte,async (req,res)=>{
+    router.delete("/deleteSkillLevelById/:skillLevelId", private,async (req,res)=>{
 
         const skillLevelId = req.params;
 
