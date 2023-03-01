@@ -2,6 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 import axios from "axios";
 import "../App.css";
+import Navbar from "../components/Navbar";
+
+const token = JSON.parse(localStorage.getItem('accessToken'));
+const config ={
+  headers: { Authorization: `Bearer ${token}` }
+};
+
 
 function CreateEmployee() {
   const [skills, setSkills] = useState([]);
@@ -10,7 +17,7 @@ function CreateEmployee() {
 
   useEffect(() => {
     // Fetch skills from the API and update state
-    axios.get("/api/skillLevel/getAllSkillLevels").then((response) => {
+    axios.get("/api/skillLevel/getAllSkillLevels",config).then((response) => {
       setSkills(response.data.skillLevels);
     });
   }, []);
@@ -46,6 +53,8 @@ function CreateEmployee() {
   };
 
   return (
+    <div>
+      <Navbar></Navbar>
     <div className="edit-employee-container">
       <form className="edit-employee-form" onSubmit={handleSubmit}>
         <h2>Create New Employee</h2>
@@ -89,6 +98,7 @@ function CreateEmployee() {
         </label>
         <button className="submit-button" type="submit">Create</button>
       </form>
+    </div>
     </div>
   );
 }
