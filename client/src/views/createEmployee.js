@@ -13,6 +13,7 @@ const config ={
 function CreateEmployee() {
   const [skills, setSkills] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState();
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -30,28 +31,65 @@ function CreateEmployee() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    // Submit form data to the API
+  
+    // Validate form data
     const formData = {
       firstName: event.target.firstName.value,
       lastName: event.target.lastName.value,
       dateOfBirth: event.target.dateOfBirth.value,
       email: event.target.email.value,
       active: event.target.active.checked,
-      age: event.target.age.value,
       skills: [selectedSkill],
     };
-
+  
+    const newErrors = {};
+  
+    if (!formData.firstName) {
+      newErrors.firstName = "First name is required";
+    }
+  
+    if (!formData.lastName) {
+      newErrors.lastName = "Last name is required";
+    }
+  
+    if (!formData.dateOfBirth) {
+      newErrors.dateOfBirth = "Date of birth is required";
+    }
+  
+    if (!formData.email) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Invalid email address";
+    }
+  
+    const birthDate = new Date(formData.dateOfBirth);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+  
+    formData.age = age;
+  
+    if (!formData.skills[0]) {
+      newErrors.skills = "Skill is required";
+    }
+  
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+  
     console.log(formData);
-
-    axios.post(`/api/employee/createEmployee`, formData)
+  
+    // Submit form data to the API
+    axios.post(`/api/employee/createEmployee`,formData,config)
     .then((response) => {
       console.log(response.data);
     });
-
-    
   };
-
+  
   return (
     <div>
       <Navbar></Navbar>
@@ -61,10 +99,12 @@ function CreateEmployee() {
         <label>
           First Name:
           <input type="text" name="firstName" />
+          {errors.firstName && <span className="error">{errors.firstName}</span>}
         </label>
         <label>
           Last Name:
           <input type="text" name="lastName" />
+          {errors.lastName && <span className="error">{errors.lastName}</span>}
         </label>
         <label>
           Date of Birth:
@@ -72,19 +112,18 @@ function CreateEmployee() {
             type="date"
             name="dateOfBirth"
           />
+          {errors.dateOfBirth && <span className="error">{errors.dateOfBirth}</span>}
         </label>
         <label>
           Email:
           <input type="text" name="email" />
+          {errors.email && <span className="error">{errors.email}</span>}
         </label>
         <label>
           Active:
           <input type="checkbox" name="active" defaultChecked={true} />
         </label>
-        <label>
-          Age:
-          <input type="number" name="age" />
-        </label>
+        
         <label>
           Select a skill:
           <select className="skill-select" value={selectedSkill} onChange={handleSkillChange}>
