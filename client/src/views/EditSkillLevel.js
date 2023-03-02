@@ -24,8 +24,8 @@ function EditSkillLevel() {
     axios
       .get(`/api/skillLevel/getSkillLevelById/${skillLevelId}`,config)
       .then((response) => {
-        setSkillName(response.data.skillName);
-        setSkillDesc(response.data.skillDesc);
+        setSkillName(response.data.returnedSkillLevel[0].skillName);
+        setSkillDesc(response.data.returnedSkillLevel[0].skillDesc);
       })
       .catch((error) => console.log(error));
   }, [skillLevelId]);
