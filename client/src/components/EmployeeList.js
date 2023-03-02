@@ -6,41 +6,43 @@ import Navbar from './Navbar.js';
 
 function EmployeeList() {
   const [employees, setEmployees] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [employeesPerPage] = useState(10);
   const navigate = useNavigate()
   const token = JSON.parse(localStorage.getItem('accessToken'));
   const config ={
     headers: { Authorization: `Bearer ${token}` }
   };
-  
-
-
 
   useEffect(() => {
-  
-axios.get('http://localhost:4000/api/employee/getAllEmployees', config)
-.then(response => setEmployees(response.data.Employees))
-.catch(error => {
-  console.error(error);
-  // handle error
-});
-
-      
+    axios.get('http://localhost:4000/api/employee/getAllEmployees', config)
+      .then(response => setEmployees(response.data.Employees))
+      .catch(error => {
+        console.error(error);
+        // handle error
+      });
   }, []);
 
   const handleDelete = (event) => {
     const employeeId = event.target.value;
-    console.log(employeeId)
     event.preventDefault();
-  axios.delete(`http://localhost:4000/api/employee/removeEmployeeById/${employeeId}`)
-  .then(navigate(0))
-  .catch(error => {
-    console.error(error);
-    
-  });
+    axios.delete(`http://localhost:4000/api/employee/removeEmployeeById/${employeeId}`)
+      .then(navigate(0))
+      .catch(error => {
+        console.error(error);
+      });
   }
 
-  
+  const indexOfLastEmployee = currentPage * employeesPerPage;
+  const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
+  const currentEmployees = employees.slice(indexOfFirstEmployee, indexOfLastEmployee);
 
+  const paginate = pageNumber => setCurrentPage(pageNumber);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(employees.length / employeesPerPage); i++) {
+    pageNumbers.push(i);
+  }
 
   return (
     <div>
@@ -61,7 +63,7 @@ axios.get('http://localhost:4000/api/employee/getAllEmployees', config)
           </tr>
         </thead>
         <tbody>
-          {employees.map(employee => (
+          {currentEmployees.map(employee => (
             <tr key={employee.employeeId}>
               <td>{employee.employeeId}</td>
               <td>{employee.firstName}</td>
@@ -78,13 +80,16 @@ axios.get('http://localhost:4000/api/employee/getAllEmployees', config)
                 ))}
               </td>
               <td><Link style={{ textDecoration: 'none',color:'black' }} to={`/editEmployee/${employee.employeeId}`}><button>Edit</button></Link></td>
-              <td><button onClick={handleDelete}value={employee._id}>Delete</button></td>
-              
+              <td><button onClick={handleDelete} value={employee._id}>Delete</button></td>
             </tr>
           ))}
         </tbody>
       </table>
-      
+      <div className="pagination">
+        {pageNumbers.map(number => (
+          <button key={number} onClick={() => paginate(number)}>{number}</button>
+        ))}
+      </div>
     </div>
   );
 }
