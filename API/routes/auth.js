@@ -114,7 +114,7 @@ router.post("/login", async (req,res)=>{
 
 //Logout
 
-router.delete("logout", async (req,res) =>{
+router.delete("/logout", async (req,res) =>{
 
     const refreshToken = req.body.refreshToken;
 
