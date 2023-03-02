@@ -1,26 +1,53 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { useState, useEffect } from 'react';
 import axios from "axios";
 
 
-const Navbar =()=> {
-  
-  useEffect(() => {
-  
-    const token = JSON.parse(localStorage.getItem('refreshToken'));
+
+const token = JSON.parse(localStorage.getItem('refreshToken'));
     const config ={
       headers: { Authorization: `Bearer ${token}` }
     };
 
+const Navbar =()=> {
+  
+  useEffect(() => {
     axios.post('http://localhost:4000/api/auth/token', {},config)
     .then(response => localStorage.setItem('accessToken',JSON.stringify(response.data.accessToken)))
     .catch(error => {
       console.error(error);
       // handle error
     });
+
   });
+
+ 
+    
+  const navigate = useNavigate();
+
+  const handleOnClick=(event)=>{
+    event.preventDefault();
+   
+
+    const data = {
+      refreshToken:token
+    }
+
+    axios.delete('http://localhost:4000/api/auth/logout', data,{})
+    .then(response => console.log(response.data),
+    localStorage.removeItem('user'),
+    localStorage.removeItem('accessToken'),
+    localStorage.removeItem('refreshToken'))
+    .catch(error => {
+      console.error(error);
+    });
+
+    navigate('/register');
+    
+
+  }
 
 
   return (
@@ -40,6 +67,9 @@ const Navbar =()=> {
         </li>
         <li>
           <Link to="/createSkillLevel">Create Skill Level</Link>
+        </li>
+        <li>
+          <Link to="/register" onClick={handleOnClick}>Log Out</Link>
         </li>
       </ul>
     </nav>
