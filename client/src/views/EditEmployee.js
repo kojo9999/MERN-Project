@@ -45,9 +45,20 @@ function EditEmployee() {
       dateOfBirth: event.target.dateOfBirth.value,
       email: event.target.email.value,
       active: event.target.active.checked,
-      age: event.target.age.value,
       skills: [selectedSkill],
     };
+
+    
+
+    const birthDate = new Date(formData.dateOfBirth);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+  
+    formData.age = age;
 
     console.log(formData);
 
@@ -58,6 +69,8 @@ function EditEmployee() {
 
     navigate('/')
   };
+
+  
 
   if (!employee) {
     return <div>Loading...</div>;
@@ -92,10 +105,6 @@ function EditEmployee() {
         <label>
           Active:
           <input type="checkbox" name="active" defaultChecked={employee.active} />
-        </label>
-        <label>
-          Age:
-          <input type="number" name="age" defaultValue={employee.age} />
         </label>
         <label>
           Select a skill:
