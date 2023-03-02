@@ -34,6 +34,7 @@ try{
     //Save Employee to collection
     await employee.save();
     console.log(employee)
+    appCache.del("allEmployees")
 
     //return Employee success message
     res.status(200).json({message:"Employee created Successfully"});
@@ -130,6 +131,8 @@ router.patch("/updateEmployeeById/:employeeId", private,async (req,res)=>{
         content
         );
         console.log(employeeId)
+        appCache.del(`employeeById_${employeeId}`)
+        appCache.del("allEmployees")
         //Return item success message
         res.status(200).json({message:"success",content});
     }catch(err){
@@ -150,6 +153,9 @@ router.delete("/removeEmployeeById/:employeeId",private, async (req,res)=>{
         await Employee.deleteOne({
             _id: employeeId.employeeId,
         }).exec();
+
+        
+        appCache.del("allEmployees")
 
         res.status(200).json({message:"success"});
     }catch(err){

@@ -77,6 +77,9 @@ router.get("/getSkillLevelById/:skillLevelId", private,async (req,res)=>{
             //Save skillLevel to collection
             await skillLevel.save();
 
+
+            appCache.del("allSkillLevels")
+
             //return skillLevel success message
             res.status(200).json({messsage:"Skill Level Created Successfully"});
         }catch(err){
@@ -96,6 +99,7 @@ router.get("/getSkillLevelById/:skillLevelId", private,async (req,res)=>{
             }).exec();
 
         
+            appCache.del('allSkillLevels')
 
             res.status(200).json({message:"Success"})
         }catch(err){
@@ -117,6 +121,9 @@ router.get("/getSkillLevelById/:skillLevelId", private,async (req,res)=>{
         },
         content
         );
+
+        appCache.del(skillLevelId)
+
         res.status(200).json({message:"success",content});
     }catch(err){
         res.status(401).json({message:err.message});
