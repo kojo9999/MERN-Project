@@ -28,7 +28,7 @@ function EmployeeList() {
   const handleDelete = (event) => {
     const employeeId = event.target.value;
     event.preventDefault();
-    axios.delete(`http://localhost:4000/api/employee/removeEmployeeById/${employeeId}`)
+    axios.delete(`http://localhost:4000/api/employee/removeEmployeeById/${employeeId}`,config,{})
       .then(navigate(0))
       .catch(error => {
         console.error(error);
