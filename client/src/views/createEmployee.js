@@ -4,6 +4,7 @@ import axios from "axios";
 import "../App.css";
 import Navbar from "../components/Navbar";
 
+
 const token = JSON.parse(localStorage.getItem('accessToken'));
 const config ={
   headers: { Authorization: `Bearer ${token}` }
@@ -88,6 +89,8 @@ function CreateEmployee() {
     .then((response) => {
       console.log(response.data);
     });
+
+    navigate('/employeeList')
   };
   
   return (
