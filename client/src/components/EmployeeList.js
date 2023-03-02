@@ -8,6 +8,8 @@ function EmployeeList() {
   const [employees, setEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [employeesPerPage] = useState(10);
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [sortColumn, setSortColumn] = useState('firstName');
   const navigate = useNavigate()
   const token = JSON.parse(localStorage.getItem('accessToken'));
   const config ={
@@ -35,13 +37,32 @@ function EmployeeList() {
 
   const indexOfLastEmployee = currentPage * employeesPerPage;
   const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
-  const currentEmployees = employees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+
+  let currentEmployees = employees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+
+  // Sorting
+  currentEmployees.sort((a, b) => {
+    if (sortOrder === 'asc') {
+      return a[sortColumn].localeCompare(b[sortColumn]);
+    } else {
+      return b[sortColumn].localeCompare(a[sortColumn]);
+    }
+  });
 
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(employees.length / employeesPerPage); i++) {
     pageNumbers.push(i);
+  }
+
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortOrder('asc');
+    }
   }
 
   return (
@@ -51,11 +72,11 @@ function EmployeeList() {
       <table>
         <thead>
           <tr>
-            <th>Employee ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Date of Birth</th>
+            <th onClick={() => handleSort('employeeId')}>Employee ID</th>
+            <th onClick={() => handleSort('firstName')}>First Name</th>
+            <th onClick={() => handleSort('lastName')}>Last Name</th>
+            <th onClick={() => handleSort('email')}>Email</th>
+            <th onClick={() => handleSort('dateOfBirth')}>Date of Birth</th>
             <th>Active Status</th>
             <th>Skill Level</th>
             <th>Edit</th>
