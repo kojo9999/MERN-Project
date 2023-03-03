@@ -123,6 +123,7 @@ router.get("/getSkillLevelById/:skillLevelId", private,async (req,res)=>{
         );
 
         appCache.del(skillLevelId)
+        appCache.del('allSkillLevels')
 
         res.status(200).json({message:"success",content});
     }catch(err){
