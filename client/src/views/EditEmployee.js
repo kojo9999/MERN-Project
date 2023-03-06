@@ -18,15 +18,17 @@ function EditEmployee() {
 
   useEffect(() => {
     // Fetch employee data from the API and update state
-    axios.get(`/api/employee/getEmployeeById/${employeeId}`,config).then((response) => {
-      setEmployee(response.data.Employees[0]);
-    });
-
+    axios.get(`/api/employee/getEmployeeById/${employeeId}`, config)
+      .then((response) => {
+        setEmployee(response.data.employees[0]); // use "employees" instead of "Employees"
+      });
+  
     // Fetch skills from the API and update state
-    axios.get("/api/skillLevel/getAllSkillLevels",config).then((response) => {
-      setSkills(response.data.skillLevels);
-      console.log(response.data.skillLevels);
-    });
+    axios.get("/api/skillLevel/getAllSkillLevels", config)
+      .then((response) => {
+        setSkills(response.data.skillLevels);
+        console.log(response.data.skillLevels);
+      });
   }, [employeeId]);
 
   const handleSkillChange = (event) => {

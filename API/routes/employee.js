@@ -92,13 +92,13 @@ router.get("/getEmployeesByName/:firstName", private,async (req, res) => {
   });
   
   // GET EMPLOYEE BY ID
-  router.get("/getEmployeeById/:employeeId",private,async (req, res) => {
+  router.get("/getEmployeeById/:employeeId",private, async (req, res) => {
     const employeeId = req.params.employeeId;
   
     if (appCache.has(`employeeById_${employeeId}`)) {
       const Employees = appCache.get(`employeeById_${employeeId}`);
       console.log(`Data for ${employeeId} from node cache`);
-      res.status(200).json({ Employees });
+      res.status(200).json({ employees: Employees });
     } else {
       try {
         // get employees with matching id
@@ -108,7 +108,7 @@ router.get("/getEmployeesByName/:firstName", private,async (req, res) => {
   
         // return employee list
         appCache.set(`employeeById_${employeeId}`, returnedEmployees);
-        res.status(200).json({ returnedEmployees });
+        res.status(200).json({ employees: returnedEmployees });
       } catch (err) {
         res.status(401).json({ message: err.message });
       }
