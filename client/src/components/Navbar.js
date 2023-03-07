@@ -51,29 +51,32 @@ const Navbar =()=> {
 
 
   return (
-    <nav className="navbar">
-      <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/employeeList">Employee List</Link>
-        </li>
-        <li>
-          <Link to="/createEmployee">Create Employee</Link>
-        </li>
-        <li>
-          <Link to="/skillList">Skill Levels</Link>
-        </li>
-        <li>
-          <Link to="/createSkillLevel">Create Skill Level</Link>
-        </li>
-        <li>
-          <Link to="/register" onClick={handleOnClick}>Log Out</Link>
-        </li>
-      </ul>
-    </nav>
-  );
+<nav className="navbar">
+  <ul>
+    <li>
+      <Link to="/">Home</Link>
+    </li>
+      <li className="dropdown">
+      <Link to="#">Employees</Link>
+        <ul className="dropdown-menu">
+          <li><Link to="/employeeList">Employee List</Link></li>
+          <li><Link to="/createEmployee">Create Employee</Link></li>
+        </ul>
+    </li>
+      <li className="dropdown">
+        <Link to="#">Skills</Link>
+        <ul className="dropdown-menu">
+          <li><Link to="/skillList">Skill Levels</Link></li>
+          <li><Link to="/createSkillLevel">Create Skill Level</Link></li>
+        </ul>
+    </li>
+    <li>
+      <Link to="/register" onClick={handleOnClick}>Log Out</Link>
+    </li>
+  </ul>
+</nav>
+
+  )
 }
 
   
