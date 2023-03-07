@@ -91,11 +91,11 @@ function EmployeeList() {
       <Navbar/>
       <h1>Employee List</h1>
       <input
-  type="text"
-  placeholder="Search by name or email"
-  value={searchTerm}
-  onChange={(event) => setSearchTerm(event.target.value)}
-/>
+        type="text"
+        placeholder="Search by name or email"
+         value={searchTerm}
+        onChange={(event) => setSearchTerm(event.target.value)}
+      />
       <table>
         <thead>
           <tr>
