@@ -11,6 +11,7 @@ function EmployeeList() {
   const [employeesPerPage] = useState(10);
   const [sortOrder, setSortOrder] = useState('asc');
   const [sortColumn, setSortColumn] = useState('firstName');
+  const [searchTerm, setSearchTerm] = useState(''); // Declare the searchTerm state variable
   // Declare navigate function from react-router-dom to allow redirection to another route
   const navigate = useNavigate()
   // Retrieve the access token from local storage
@@ -45,8 +46,14 @@ function EmployeeList() {
   const indexOfLastEmployee = currentPage * employeesPerPage;
   const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
 
-  // Slice the employees array to only include employees on the current page
-  let currentEmployees = employees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+  // Filter employees based on search term
+  const filteredEmployees = employees.filter(employee => {
+    const regex = new RegExp(searchTerm, 'gi'); // Create a regular expression to search for the searchTerm globally and case-insensitively
+    return employee.firstName.match(regex) || employee.lastName.match(regex) || employee.email.match(regex); // Return employees that have a match in the firstName, lastName, or email fields
+  });
+
+  // Slice the filtered employees array to only include employees on the current page
+  const currentEmployees = filteredEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
 
   // Sorting
   // Sort the current employees array based on the sort order and sort column state variables
@@ -63,7 +70,7 @@ function EmployeeList() {
 
   // Create an array of page numbers for pagination
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(employees.length / employeesPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(filteredEmployees.length / employeesPerPage); i++) {
     pageNumbers.push(i);
   }
 
@@ -83,6 +90,12 @@ function EmployeeList() {
       {/* Render the navbar component */}
       <Navbar/>
       <h1>Employee List</h1>
+      <input
+  type="text"
+  placeholder="Search by name or email"
+  value={searchTerm}
+  onChange={(event) => setSearchTerm(event.target.value)}
+/>
       <table>
         <thead>
           <tr>
