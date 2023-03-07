@@ -5,17 +5,22 @@ import { Link, useNavigate } from 'react-router-dom'
 import Navbar from './Navbar.js';
 
 function EmployeeList() {
+  // Declare state variables for employees, current page, employees per page, sort order, and sort column
   const [employees, setEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [employeesPerPage] = useState(10);
   const [sortOrder, setSortOrder] = useState('asc');
   const [sortColumn, setSortColumn] = useState('firstName');
+  // Declare navigate function from react-router-dom to allow redirection to another route
   const navigate = useNavigate()
+  // Retrieve the access token from local storage
   const token = JSON.parse(localStorage.getItem('accessToken'));
+  // Set the authorization header for axios requests
   const config ={
     headers: { Authorization: `Bearer ${token}` }
   };
 
+  // Fetch employees data from API using axios and update the state variable
   useEffect(() => {
     axios.get('http://localhost:4000/api/employee/getAllEmployees', config)
       .then(response => setEmployees(response.data.Employees))
@@ -25,6 +30,7 @@ function EmployeeList() {
       });
   }, []);
 
+  // Handle the delete button click by sending a delete request to API and redirect to home page
   const handleDelete = (event) => {
     const employeeId = event.target.value;
     event.preventDefault();
@@ -35,12 +41,15 @@ function EmployeeList() {
       });
   }
 
+  // Calculate the index of the last employee on the current page and the index of the first employee on the current page
   const indexOfLastEmployee = currentPage * employeesPerPage;
   const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
 
+  // Slice the employees array to only include employees on the current page
   let currentEmployees = employees.slice(indexOfFirstEmployee, indexOfLastEmployee);
 
   // Sorting
+  // Sort the current employees array based on the sort order and sort column state variables
   currentEmployees.sort((a, b) => {
     if (sortOrder === 'asc') {
       return a[sortColumn].localeCompare(b[sortColumn]);
@@ -49,13 +58,16 @@ function EmployeeList() {
     }
   });
 
+  // Function to change the current page number
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
+  // Create an array of page numbers for pagination
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(employees.length / employeesPerPage); i++) {
     pageNumbers.push(i);
   }
 
+  // Handle column sorting by updating the sort order and sort column state variables
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
@@ -65,13 +77,16 @@ function EmployeeList() {
     }
   }
 
+  // Render the employee list table
   return (
     <div>
+      {/* Render the navbar component */}
       <Navbar/>
       <h1>Employee List</h1>
       <table>
         <thead>
           <tr>
+            {/* Add sorting capability by passing the column name to handleSort function */}
             <th onClick={() => handleSort('employeeId')}>Employee ID</th>
             <th onClick={() => handleSort('firstName')}>First Name</th>
             <th onClick={() => handleSort('lastName')}>Last Name</th>
