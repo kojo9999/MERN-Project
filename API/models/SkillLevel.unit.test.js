@@ -23,6 +23,19 @@ describe("Skill Level Routes", () => {
     });
   });
 
+  
+  // Testing GET /getAllSkillLevels route
+  describe("GET /getAllSkillLevels", () => {
+    it("should return status code 200 and a list of skill levels from cache", async () => {
+      const res = await request(app)
+        .get("/api/skillLevel/getAllSkillLevels")
+        .set("Authorization", token);
+      expect(res.statusCode).toEqual(200);
+      expect(Array.isArray(res.body.skillLevels)).toBe(true);
+      console.log(res.body)
+    });
+  });
+
     // Testing POST /createNewSkillLevel route
     describe("POST /createNewSkillLevel", () => {
         it("should create a new skill level and return status code 200 with a success message", async () => {
@@ -47,6 +60,19 @@ describe("Skill Level Routes", () => {
       console.log(res.body);
     });
   });
+
+    // Testing GET /getSkillLevelById/:skillLevelId route
+    describe("GET /getSkillLevelById/1234567890", () => {
+      it("should return status code 200 and a single skill level object from cache", async () => {
+       
+        const res = await request(app)
+          .get("/api/skillLevel/getSkillLevelById/1234567890")
+          .set("Authorization", token);
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.returnedSkillLevel[0].skillLevelId).toEqual("1234567890");
+        console.log(res.body);
+      });
+    });
 
     // Testing PATCH /updateSkillLevelById/:skillLevelId route
     describe("PATCH /updateSkillLevelById/:skillLevelId", () => {
