@@ -179,4 +179,20 @@ if (!authHeader) {
     }
   });
 
+  router.delete("/deleteUserById/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+      // Find user by id and remove it
+      const deletedUser = await User.findByIdAndRemove(id);
+      
+      // Delete associated refresh tokens
+      await RefreshToken.deleteMany({ _id: { $in: deletedUser.refreshTokens } });
+      
+      res.status(200).json({ message: "User deleted" });
+    } catch (err) {
+      res.status(401).json({ message: err.message });
+    }
+  });
+  
+
 module.exports = router;
