@@ -1,9 +1,12 @@
 const mongoose = require("mongoose");
+const uuid = require("uuid-random");
+const guid =uuid();
 
 const EmployeeSchema = new mongoose.Schema({
-
+    
     employeeId:{
         type: String,
+        default: guid
     },
     firstName:{
         type: String,

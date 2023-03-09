@@ -7,10 +7,10 @@ const uuid = require("uuid-random");
 const nodecache = require('node-cache')
 const appCache = new nodecache({stdTTL:360})
 require('isomorphic-fetch');
-const private = require("./private")
+const privateRoute = require("./private")
 
 
-router.get("/getAllSkillLevels",private, async (req,res)=>{
+router.get("/getAllSkillLevels",privateRoute, async (req,res)=>{
 
     if(appCache.has('allSkillLevels')){
         const skillLevels= appCache.get('allSkillLevels');
@@ -32,7 +32,7 @@ router.get("/getAllSkillLevels",private, async (req,res)=>{
 });
 
 //FIND SKILL LEVEL BY ID
-router.get("/getSkillLevelById/:skillLevelId", private,async (req,res)=>{
+router.get("/getSkillLevelById/:skillLevelId", privateRoute,async (req,res)=>{
 
     const skillLevelId = req.params.skillLevelId;
 
@@ -60,13 +60,13 @@ router.get("/getSkillLevelById/:skillLevelId", private,async (req,res)=>{
 });
 
      //CREATE NEW SKILL LEVEL
-     router.post("/createNewSkillLevel",private, async (req,res)=>{
-        const{skillName,skillDesc} = req.body;
+     router.post("/createNewSkillLevel",privateRoute, async (req,res)=>{
+        const{skillLevelId,skillName,skillDesc} = req.body;
 
         const guid = uuid();
 
         const skillLevel = new SkillLevel({
-            skillLevelId: guid,
+            skillLevelId,
             skillName,
             skillDesc,
         });
@@ -89,7 +89,7 @@ router.get("/getSkillLevelById/:skillLevelId", private,async (req,res)=>{
     });
 
     //DELETE SKILL LEVEL BY ID
-    router.delete("/deleteSkillLevelById/:skillLevelId", private,async (req,res)=>{
+    router.delete("/deleteSkillLevelById/:skillLevelId", privateRoute,async (req,res)=>{
 
         const skillLevelId = req.params;
 
@@ -110,7 +110,7 @@ router.get("/getSkillLevelById/:skillLevelId", private,async (req,res)=>{
     });
 
     //UPDATE SKILL LEVEL BY ID
-    router.patch("/updateSkillLevelById/:skillLevelId",private,async (req,res)=>{
+    router.patch("/updateSkillLevelById/:skillLevelId",privateRoute,async (req,res)=>{
 
         const {skillLevelId} = req.params;
         const content = req.body;

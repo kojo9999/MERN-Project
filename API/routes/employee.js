@@ -7,20 +7,20 @@ const uuid = require("uuid-random");
 const nodecache = require('node-cache')
 const appCache = new nodecache({stdTTL:360})
 require('isomorphic-fetch');
-const private = require('./private')
+const privateRoute = require('./private')
 
 
 
 //CREATE NEW EMPLOYEE
-router.post("/createEmployee", private,async (req,res)=>{
-const{firstName, lastName, dateOfBirth, email, active,age,skills}=req.body;
+router.post("/createEmployee", privateRoute,async (req,res)=>{
+const{employeeId,firstName, lastName, dateOfBirth, email, active,age,skills}=req.body;
 
 const guid = uuid();
 
 //create new employee object
 
 const employee = new Employee({
-    employeeId: guid,
+    employeeId,
     firstName, 
     lastName, 
     dateOfBirth, 
@@ -46,7 +46,7 @@ try{
 
 //GET ALL EMPLOYEES
 
-router.get("/getAllEmployees", private,async (req,res)=>{
+router.get("/getAllEmployees", privateRoute,async (req,res)=>{
 
     if(appCache.has('allEmployees')){
         const Employees= appCache.get('allEmployees');
@@ -68,7 +68,7 @@ router.get("/getAllEmployees", private,async (req,res)=>{
 });
 
 // GET EMPLOYEES BY NAME
-router.get("/getEmployeesByName/:firstName", private,async (req, res) => {
+router.get("/getEmployeesByName/:firstName", privateRoute,async (req, res) => {
     const firstName = req.params.firstName;
   
     if (appCache.has(`employeesByName_${firstName}`)) {
@@ -92,7 +92,7 @@ router.get("/getEmployeesByName/:firstName", private,async (req, res) => {
   });
   
   // GET EMPLOYEE BY ID
-  router.get("/getEmployeeById/:employeeId",private, async (req, res) => {
+  router.get("/getEmployeeById/:employeeId",privateRoute, async (req, res) => {
     const employeeId = req.params.employeeId;
   
     if (appCache.has(`employeeById_${employeeId}`)) {
@@ -117,7 +117,7 @@ router.get("/getEmployeesByName/:firstName", private,async (req, res) => {
 
 //UPDATE EMPLOYEE BY ID
 
-router.patch("/updateEmployeeById/:employeeId", private,async (req,res)=>{
+router.patch("/updateEmployeeById/:employeeId", privateRoute,async (req,res)=>{
 
     const {employeeId} = req.params;
     const content = req.body;
@@ -145,7 +145,7 @@ router.patch("/updateEmployeeById/:employeeId", private,async (req,res)=>{
 });
 
 //DELETE EMPLOYEE BY ID
-router.delete("/removeEmployeeById/:employeeId",private, async (req,res)=>{
+router.delete("/removeEmployeeById/:employeeId",privateRoute, async (req,res)=>{
 
     const employeeId = req.params
     console.log(employeeId.employeeId)
