@@ -3,6 +3,15 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require('cors');
+let serverConnection =""
+
+//TEST CONTROLLER
+if(process.env.TEST_MODE=="FALSE"){
+  serverConnection= process.env.DB_CONNECTION;
+}
+else{
+  serverConnection =process.env.TEST_DB_CONNECTION
+}
 
 const SERVER_PORT = process.env.PORT || 4000;
 app.use(express.urlencoded({ extended: true }));
@@ -35,11 +44,18 @@ app.use(cors({
 
 // DB CONNECTION
 mongoose.connect(
-  process.env.DB_CONNECTION,
+  serverConnection,
   { useNewUrlParser: true, useUnifiedTopology: true },
   () => console.log("DB CONNECTED")
 );
 
-app.listen(SERVER_PORT, () =>
-  console.log(`SERVER RUNNING ON PORT ${SERVER_PORT}`)
-);
+
+if(process.env.TEST_MODE=="FALSE")
+{
+app.listen(SERVER_PORT, () => {
+  console.log(`SERVER RUNNING ON PORT ${SERVER_PORT}`);
+});
+}
+
+
+module.exports =app;
