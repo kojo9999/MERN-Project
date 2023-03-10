@@ -24,7 +24,7 @@ describe("Skill Level Routes", () => {
   });
 
   
-  // Testing GET /getAllSkillLevels route
+  // Testing GET /getAllSkillLevels route with cache
   describe("GET /getAllSkillLevels", () => {
     it("should return status code 200 and a list of skill levels from cache", async () => {
       const res = await request(app)
